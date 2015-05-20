@@ -1,0 +1,11 @@
+0. Groovy Eclipse Plugin:
+1. change classpath:
+	<classpathentry kind="src" path="src/main/groovy" including="**/*.groovy"/>
+2. change project:
+	<natures>
+		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+	</natures>
+3. remove 
+	<classpathentry exported="true" kind="con" path="GROOVY_SUPPORT"/>
+	<classpathentry exported="true" kind="con" path="GROOVY_DSL_SUPPORT"/>

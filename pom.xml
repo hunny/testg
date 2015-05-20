@@ -1,29 +1,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>hh.learng</groupId>
 	<artifactId>testg</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
 	<name>testg</name>
 	<url>http://maven.apache.org</url>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>4.12</junit.version>
+		<junit.version>4.12</junit.version>
 	</properties>
 	<dependencies>
 		<dependency>
-		  <groupId>org.projectlombok</groupId>
-		  <artifactId>lombok</artifactId>
-		  <version>1.16.4</version>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.4</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.codehaus.groovy</groupId>
-		    <artifactId>groovy-all</artifactId>
-		    <version>2.4.3</version>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.4.3</version>
 		</dependency>
 		<!-- 单元测试使用包 -->
 		<dependency>
@@ -35,67 +32,92 @@
 		</dependency>
 	</dependencies>
 	<build>
-        <plugins>
-		      <plugin>
-		        <artifactId>maven-compiler-plugin</artifactId>
-		        <!-- 2.8.0-01 and later require maven-compiler-plugin 3.1 or higher -->
-		        <version>3.3</version>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<!-- 2.8.0-01 and later require maven-compiler-plugin 3.1 or higher -->
+				<version>3.3</version>
 				<configuration>
-				  <compilerId>groovy-eclipse-compiler</compilerId>
-				  <verbose>true</verbose>
-				  <compilerArguments>
-				    <javaAgentClass>lombok.core.Agent</javaAgentClass>
-				  </compilerArguments>
-				  <fork>true</fork>
+					<source>1.6</source>
+					<target>1.6</target>
+					<compilerId>groovy-eclipse-compiler</compilerId>
+					<verbose>true</verbose>
+					<extensions>true</extensions>
+					<additionalProjectnatures>
+						<projectnature>org.eclipse.jdt.groovy.core.groovyNature</projectnature>
+					</additionalProjectnatures>
+					<sourceIncludes>
+						<sourceInclude>**/*.groovy</sourceInclude>
+					</sourceIncludes>
+					<sourceDirectory>src/main/groovy</sourceDirectory>
+					<testSourceDirectory>src/test/groovy</testSourceDirectory>
 				</configuration>
-		        <dependencies>
-		          <dependency>
-		            <groupId>org.codehaus.groovy</groupId>
-		            <artifactId>groovy-eclipse-compiler</artifactId>
-		            <version>2.9.2-01</version>
-		          </dependency>
-		          <!-- for 2.8.0-01 and later you must have an explicit dependency on groovy-eclipse-batch -->
-		          <dependency>
-		            <groupId>org.codehaus.groovy</groupId>
-		            <artifactId>groovy-eclipse-batch</artifactId>
-		            <version>2.4.3-01</version>
-		          </dependency>
-		        </dependencies>
-		      </plugin>
-		      <plugin>
-			    <groupId>org.codehaus.mojo</groupId>
-			    <artifactId>build-helper-maven-plugin</artifactId>
-			    <version>1.5</version>
-			    <executions>
-			      <execution>
-			        <id>add-source</id>
-			        <phase>generate-sources</phase>
-			        <goals>
-			          <goal>add-source</goal>
-			        </goals>
-			        <configuration>
-			          <sources>
-			            <source>src/main/groovy</source>
-			          </sources>
-			        </configuration>
-			      </execution>
-			      <execution>
-			        <id>add-test-source</id>
-			        <phase>generate-test-sources</phase>
-			        <goals>
-			          <goal>add-test-source</goal>
-			        </goals>
-			        <configuration>
-			          <sources>
-			            <source>src/test/groovy</source>
-			          </sources>
-			        </configuration>
-			      </execution>
-			    </executions>
-			  </plugin>
-        </plugins>
-    </build>
-    <repositories>
+				<dependencies>
+					<!-- for 2.8.0-01 and later you must have an explicit dependency on 
+						groovy-eclipse-batch -->
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-eclipse-batch</artifactId>
+						<version>2.4.3-01</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.groovy</groupId>
+						<artifactId>groovy-eclipse-compiler</artifactId>
+						<version>2.9.2-01</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<!-- Define Groovy Eclipse Compiler again and set extensions=true. Thanks 
+				to this, plugin will -->
+			<!-- enhance default build life cycle with an extra phase which adds additional 
+				Groovy source folders -->
+			<!-- Thanks to this, Clover will be able to find your Groovy files. It 
+				works with Maven 3.x -->
+			<!-- <plugin> <groupId>org.codehaus.groovy</groupId> <artifactId>groovy-eclipse-compiler</artifactId> 
+				<version>2.9.2-01</version> <extensions>true</extensions> </plugin> -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/main/groovy</source>
+							</sources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>add-test-source</id>
+						<phase>generate-test-sources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/test/groovy</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Configure Clover for Maven plug-in. Please note that it's not bound 
+				to any execution phase, -->
+			<!-- so you'll have to call Clover goals from command line. -->
+			<plugin>
+				<groupId>com.atlassian.maven.plugins</groupId>
+				<artifactId>maven-clover2-plugin</artifactId>
+				<version>4.0.4</version>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
 		<repository>
 			<id>maven2-central</id>
 			<name>Maven2 Repository</name>
@@ -104,5 +126,5 @@
 				<enabled>true</enabled>
 			</releases>
 		</repository>
-    </repositories>
+	</repositories>
 </project>
