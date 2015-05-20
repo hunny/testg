@@ -1,2 +1,4 @@
 1. Operate Command:
 mvn clean install eclipse:clean eclipse:eclipse
+2. https://github.com/groovy/groovy-eclipse/wiki
+Groovy Eclipse Update Site:http://dist.springsource.org/snapshot/GRECLIPSE/e4.4/
