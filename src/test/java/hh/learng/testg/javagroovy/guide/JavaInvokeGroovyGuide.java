@@ -6,6 +6,7 @@ import groovy.lang.GroovyObject;
 import groovy.lang.GroovyShell;
 import groovy.util.GroovyScriptEngine;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 public class JavaInvokeGroovyGuide {
@@ -28,6 +29,9 @@ public class JavaInvokeGroovyGuide {
 			GroovyScriptEngine engine = new GroovyScriptEngine("");
 			Binding binding = new Binding();
 			binding.setVariable("language", "Groovy");
+			System.out.println("===================> "
+					+ new File(JavaInvokeGroovyGuide.class.getResource(
+							"/hh/learng/testgroovy/TestGroovy.class").toURI()));
 			Object value = engine.run(
 					"src/main/groovy/hh/learng/testgroovy/TestGroovy.groovy",
 					binding);
@@ -72,20 +76,21 @@ public class JavaInvokeGroovyGuide {
 		 */
 		GroovyClassLoader groovyClassLoader = new GroovyClassLoader(
 				JavaInvokeGroovyGuide.class.getClassLoader());
+		GroovyScriptClassCache groovyScriptClassCache = GroovyScriptClassCache
+				.newInstance();
 		try {
 			String scriptText = "class Foo {\n"
 					+ "  int add(int x, int y) { x + y }}";
 			Class<?> newClazz = null;
-			System.out.println("script text hash code:" + scriptText.hashCode());
+			System.out
+					.println("script text hash code:" + scriptText.hashCode());
 			String classKey = String.valueOf(scriptText.hashCode());
 			// 先从缓存里面去Class文件
-			if (GroovyScriptClassCache.newInstance().containsKey(classKey)) {
-				newClazz = GroovyScriptClassCache.newInstance().getClassByKey(
-						classKey);
+			if (groovyScriptClassCache.containsKey(classKey)) {
+				newClazz = groovyScriptClassCache.getClassByKey(classKey);
 			} else {
 				newClazz = groovyClassLoader.parseClass(scriptText);
-				GroovyScriptClassCache.newInstance().putClass(classKey,
-						newClazz);
+				groovyScriptClassCache.putClass(classKey, newClazz);
 			}
 			GroovyObject go = (GroovyObject) newClazz.newInstance();
 			System.out.println("===================> GroovyObject HashCode:"
