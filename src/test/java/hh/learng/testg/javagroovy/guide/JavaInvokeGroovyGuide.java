@@ -7,7 +7,6 @@ import groovy.util.GroovyScriptEngine;
 
 public class JavaInvokeGroovyGuide {
 
-	/** * @param args */
 	public static void main(String[] args) {
 		long time = System.currentTimeMillis();
 		exeGroovyClassWithParameters();
@@ -27,6 +26,7 @@ public class JavaInvokeGroovyGuide {
 			Binding binding = new Binding();
 			binding.setVariable("language", "Groovy");
 			Object value = engine.run("src/main/groovy/hh/learng/testgroovy/TestGroovy.groovy", binding);
+			System.out.println("===================> value = " + value);
 			assert value.equals("The End");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,7 +44,8 @@ public class JavaInvokeGroovyGuide {
 		binding.setVariable("language", "Groovy");
 		GroovyShell shell = new GroovyShell(binding);
 		Object value = shell
-				.evaluate("println \"Welcome to $language\"; y = x * 2; z = x * 3; println x ");
+				.evaluate("println \"Welcome to $language\"; y = x * 2; z = x * 3; println x ;return x;");
+		System.out.println("===================> value = " + value);
 		assert value.equals(10);
 		assert binding.getVariable("y").equals(20);
 		assert binding.getVariable("z").equals(30);
@@ -55,7 +56,7 @@ public class JavaInvokeGroovyGuide {
 	 * 直接调用Groovy脚本类，并从外面直接传递参数
 	 */
 	protected static void exeGroovyClassWithParameters() {
-		System.out.println("===================> Executing fun1");
+		System.out.println("===================> Executing exeGroovyClassWithParameters");
 		GroovyClassLoader loader = new GroovyClassLoader();
 		try {
 			String scriptText = "class Foo {\n"
@@ -67,7 +68,7 @@ public class JavaInvokeGroovyGuide {
 			System.out.println(i);
 		} catch (Exception e) {
 		}
-		System.out.println("===================> Executed fun1");
+		System.out.println("===================> Executed exeGroovyClassWithParameters");
 	}
 
 }
