@@ -6,19 +6,10 @@ class CompareTableAndViews {
 
 	static main(args) {
 		
-		def srcConfig = [
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver',
-			host:'192.168.9.205',
-			port:'6543',
-			name:'cloudAC_Dev'
-		]
+		def srcSql = sqlInstance(config([host:'192.168.9.205', name:'cloudAC_Dev']))
 		
-		def srcSql = sqlInstance(srcConfig)
-		
-		def sql = "SELECT table_schema,table_name FROM information_schema.tables WHERE table_name like 'act%' ORDER BY table_schema,table_name;"
-		def vsql = "select table_name from INFORMATION_SCHEMA.views "//WHERE table_schema = ANY (current_schemas(false))
+		def tsql = "SELECT table_schema,table_name FROM information_schema.tables WHERE table_name like 'act%' ORDER BY table_schema, table_name;"
+		def vsql = "SELECT table_name FROM information_schema.views "//WHERE table_schema = ANY (current_schemas(false))
 		def table = [:]
 		def view = [:]
 		
@@ -26,7 +17,7 @@ class CompareTableAndViews {
 			
 		}
 		
-		srcSql.eachRow(sql) {
+		srcSql.eachRow(tsql) {
 			table[it.table_name] = 'YES'
 		}
 		
@@ -34,18 +25,9 @@ class CompareTableAndViews {
 			view[it.table_name] = 'YES'
 		}
 		
-		def destConfig = [
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver',
-			host:'192.168.9.245',
-			port:'6543',
-			name:'cloudAC'
-		]
+		def destSql = sqlInstance(config([host:'192.168.9.245', name:'cloudAC']))
 		
-		def destSql = sqlInstance(destConfig)
-		
-		destSql.eachRow(sql) {
+		destSql.eachRow(tsql) {
 			table[it.table_name] = 'OK'
 		}
 		
@@ -70,6 +52,23 @@ class CompareTableAndViews {
 			}
 		}
 		println '====================> Views Different Number:' + n
+	}
+	
+	def static config(map) {
+		
+		def myconfig = [
+			user:'dev',
+			passwd:'dev@1234',
+			driver:'org.postgresql.Driver',
+			host:'192.168.9.245',
+			port:'6543',
+			name:'cloudAC'
+		]
+		
+		if (map && map.size() > 1) {
+			myconfig.putAll(map)
+		}
+		return myconfig
 	}
 	
 	def static sqlInstance(config) {
