@@ -11,6 +11,9 @@ class GroovyRegexExpressionTest {
 	 * regex查找操作符：=~
 	 * regex匹配操作符：==~
 	 * regex模式操作符：~String
+	 * 注意:记住=~和==~的不同之处,
+	 * ==~是更严格的匹配,因为需要检查整个字符串,
+	 * ==~ 像操作符要长一些,所以要求的内容更多一些
 	 */
 	@Test
 	public void test() {
