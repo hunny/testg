@@ -39,6 +39,11 @@ class GroovyWorkingMatch {
 		def cloze = tmp.replaceAll(rhyme) { it - 'ain' + '___'}
 		println cloze
 		assert cloze == 'The r___ in Sp___ stays mainly in the pl___!'
+		
+		def matcher = 'a b c' =~ /\S/ 
+		assert matcher[0] == 'a' 
+		assert matcher[1..2] == 'bc' 
+		assert matcher.count == 3
 	}
 
 }
