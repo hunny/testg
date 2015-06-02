@@ -63,6 +63,9 @@ class GroovyBasicTest {
 		Object value = shell.evaluate("($x1 + $y1) * $z1")
 		println value
 		assert 'ABCDE'.indexOf(67) == 2
+		
+		println '3.0'.toDouble()
+		println '45'.toInteger()
 	}
 
 	@Test
