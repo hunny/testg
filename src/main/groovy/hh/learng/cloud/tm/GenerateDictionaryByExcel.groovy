@@ -5,19 +5,36 @@ import hh.learng.apache.poi.ExcelBuilder
 
 class GenerateDictionaryByExcel {
 	
-	def db = [url:'jdbc:postgresql://192.168.9.245:5432/cloudCompass',
-		user:'postgres',
-		passwd:'123456',
-		driver:'org.postgresql.Driver'];
 	def file = new File('D:/myfile.txt')
 	
+	def config(map) {
+		
+		def myconfig = [
+			user:'dev',
+			passwd:'dev@1234',
+			driver:'org.postgresql.Driver',
+			host:'192.168.9.245',
+			port:'6543',
+			name:'cloudAC'
+		]
+		
+		if (map && map.size() > 1) {
+			myconfig.putAll(map)
+		}
+		return myconfig
+	}
+	
+	def sqlInstance(config) {
+		return Sql.newInstance("jdbc:postgresql://${config.host}:${config.port}/${config.name}", config.user, config.passwd, config.driver)
+	}
+	
 	def build() {
-		def query = Sql.newInstance(db.url, db.user, db.passwd, db.driver);
+		def query = sqlInstance(config([host:'192.168.9.245', name:'cloudHR']));
 		try {
 			println 'DO $$ \n BEGIN'
 			file.append('DO $$ \nBEGIN\n', 'UTF-8')
 			def company = query.firstRow('SELECT pf_005_id as sip FROM c_pf_t_005 WHERE pf_005_id >= 100 and pf_005_id <= 300 order by pf_005_id desc limit 1')
-			new ExcelBuilder("D:/中英文对照表.xls").eachLine([labels:true]) {
+			new ExcelBuilder("C:/Users/Hunny.hu/Desktop/中英文对照表.xls").eachLine([labels:true]) {
 				query.eachRow("SELECT c001.* FROM c_tm_c_001 c001 LEFT JOIN c_tm_c_000 c000 ON c001.tmconobj = c000.tm_000_id where c001.sys_sip = ${company.sip} and c001.com_langval = '" + cell(1) + "' and tmconobj_code = '" + (cell(0) + '').replaceAll('\\..*$', '') + "'"){ row ->
 					try {
 						//println row.sys_sip + '|' + row.sys_creator + '|' + row.tmconobj + '|' + row.com_lang + '|' + row.com_langval
