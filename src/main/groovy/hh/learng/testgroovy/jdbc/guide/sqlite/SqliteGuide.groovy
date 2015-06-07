@@ -16,18 +16,23 @@ class SqliteGuide {
 			println it
 		}
 		
+		query.eachRow('select * from sqlite_sequence') {
+			println it
+		}
+		
 	}
 	
 	def static config(map) {
 		
 		def myconfig = [
-			driver: 'org.sqlite.JDBC',
-			path: 'sqlite.db'
+			driver:'org.sqlite.JDBC',
+			path:'sqlite.db'
 		]
 		
-		if (map && map.size() > 1) {
+		if (map && !map.isEmpty()) {
 			myconfig.putAll(map)
 		}
+		
 		return myconfig
 	}
 	
