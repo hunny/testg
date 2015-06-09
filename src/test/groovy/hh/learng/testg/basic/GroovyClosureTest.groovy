@@ -21,7 +21,59 @@ class GroovyClosureTest {
 		assert 10 == multi('string arg')
 		assert 3 == multi(['lis', 'of', 'value'])
 		assert 14 == multi(6, 8)
+		
+		//Parameter sequence with commas
+		def map = ['a': 1, 'b': 2]
+		//(1),我们直接把闭包作为参数传递,这是最常用的一种方式。
+		map.each {key, value-> map[key] = value * 2}
+		assert map == ['a': 2, 'b': 4]
+		//Assign and then call a closure reference
+		//(2)声明闭包的方式是与后面的用法不连贯的,花括号是 groovy 声明闭包的方式, 因此我们将闭包对象赋值给变量 doubler
+		def doubler = {key, value-> map[key] = value * 2}
+		map.each(doubler)
+		assert map == ['a':4, 'b':8]
+		//Reference and call a method as a closure
+		//(4),referenc e.&操作符用来引用方法名称为一个闭包,这一次,方法也没有立即被 调用;执行的代码在接下来的一行,
+		//这就像(2)一样,闭包被传递给 each 方法,这个方法 为 map 中的每一个实体进行回调。
+		doubler = this.&doubleMethod
+		map.each(doubler)
+		assert map == ['a':8, 'b':16]
+		
+		//调用闭包
+		//Calling closures
+		def adder = {x, y -> return x + y}
+		assert adder(4, 3) == 7
+		assert adder.call(2, 6) == 8
+		
+		//Pass different closures for analysis
+		def slow = benchmark(1000) {(int) it / 2}
+		def fast = benchmark(1000) {it.intdiv(2)}
+		assert fast < slow * 15
+		
+		//Closure default value
+		adder = {x, y = 5 -> return x + y}
+		assert adder(4, 3) == 7
+		assert adder.call(7) == 12
+		
+		//p.130
 	}
+	
+	//A usual method declaration
+	//(3)的方法声明是一个普通的方法,这里没有发现使用闭包的痕迹。
+	def doubleMethod (entry) {
+		entry.value = entry.value * 2
+	}
+	
+	def benchmark(repeat, Closure worker) {//1. Put closure last
+		//2 Some pre-work
+		def start = System.currentTimeMillis()
+		//3 Call closure the given number of times
+		repeat.times {worker(it)}
+		//4 Some post-work
+		def stop = System.currentTimeMillis()
+		return stop - start
+	}
+	
 
 }
 
