@@ -1,7 +1,5 @@
 package hh.learng.cloud.tm
 
-import groovy.sql.*
-
 /**
  * 根据type生成考勤模块的数据字典脚本
  * @author Hunny.Hu
@@ -9,11 +7,7 @@ import groovy.sql.*
 class GenerateDataDictionary {
 
 	static main(args) {
-		def db = [url:'jdbc:postgresql://192.168.9.205:6543/cloudDachser_Dev',
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver'];
-		def query = Sql.newInstance(db.url, db.user, db.passwd, db.driver);
+		def query = Gdbc.source(['host': '192.168.9.205', 'name': 'cloudDachser_Dev']);
 		try {
 			println 'DO $$';
 			println 'BEGIN';

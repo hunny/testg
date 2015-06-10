@@ -1,7 +1,5 @@
 package hh.learng.cloud.tm
 
-import groovy.sql.*
-
 class GeneratePageScript {
 
 	def query
@@ -63,11 +61,7 @@ class GeneratePageScript {
 	}
 
 	static main(args) {
-		def db = [url:'jdbc:postgresql://192.168.9.205:6543/cloudAC_Dev',
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver']
-		def query = Sql.newInstance(db.url, db.user, db.passwd, db.driver)
+		def query = Gdbc.source([host:'192.168.9.205', name:'cloudAC_Dev'])
 		def file = new File('d:/tm_page_sql.txt')
 		new GeneratePageScript(query, file).build()
 	}

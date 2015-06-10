@@ -1,12 +1,10 @@
 package hh.learng.cloud.tm
 
-import groovy.sql.*
-
 class CompareTableAndViews {
 
 	static main(args) {
 		
-		def srcSql = sqlInstance(config([host:'192.168.9.205', name:'cloudAC_Dev']))
+		def srcSql = Gdbc.source([host:'192.168.9.205', name:'cloudAC_Dev'])
 		
 		def tsql = "SELECT table_schema,table_name FROM information_schema.tables WHERE table_name like 'act%' ORDER BY table_schema, table_name;"
 		def vsql = "SELECT table_name FROM information_schema.views "//WHERE table_schema = ANY (current_schemas(false))
@@ -52,27 +50,6 @@ class CompareTableAndViews {
 			}
 		}
 		println '====================> Views Different Number:' + n
-	}
-	
-	def static config(map) {
-		
-		def myconfig = [
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver',
-			host:'192.168.9.245',
-			port:'6543',
-			name:'cloudAC'
-		]
-		
-		if (map && map.size() > 1) {
-			myconfig.putAll(map)
-		}
-		return myconfig
-	}
-	
-	def static sqlInstance(config) {
-		return Sql.newInstance("jdbc:postgresql://${config.host}:${config.port}/${config.name}", config.user, config.passwd, config.driver)
 	}
 
 }

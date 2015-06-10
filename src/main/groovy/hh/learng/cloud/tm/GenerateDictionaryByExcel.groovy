@@ -7,29 +7,8 @@ class GenerateDictionaryByExcel {
 	
 	def file = new File('D:/myfile.txt')
 	
-	def config(map) {
-		
-		def myconfig = [
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver',
-			host:'192.168.9.245',
-			port:'6543',
-			name:'cloudAC'
-		]
-		
-		if (map && map.size() > 1) {
-			myconfig.putAll(map)
-		}
-		return myconfig
-	}
-	
-	def sqlInstance(config) {
-		return Sql.newInstance("jdbc:postgresql://${config.host}:${config.port}/${config.name}", config.user, config.passwd, config.driver)
-	}
-	
 	def build() {
-		def query = sqlInstance(config([host:'192.168.9.245', name:'cloudHR']));
+		def query = Gdbc.source([host:'192.168.9.245', name:'cloudHR'])
 		try {
 			println 'DO $$ \n BEGIN'
 			file.append('DO $$ \nBEGIN\n', 'UTF-8')
