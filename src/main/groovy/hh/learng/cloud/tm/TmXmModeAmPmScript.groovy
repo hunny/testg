@@ -1,31 +1,8 @@
 package hh.learng.cloud.tm
 
-import groovy.sql.*
-
 class TmXmModeAmPmScript {
 	
 	def file = new File('D:/myfile.txt')
-	
-		static def config(map) {
-		
-		def myconfig = [
-			user:'dev',
-			passwd:'dev@1234',
-			driver:'org.postgresql.Driver',
-			host:'192.168.9.205',
-			port:'6543',
-			name:'cloudAC_Dev'
-		]
-		
-		if (map && map.size() > 1) {
-			myconfig.putAll(map)
-		}
-		return myconfig
-	}
-	
-	static def sqlInstance(config) {
-		return Sql.newInstance("jdbc:postgresql://${config.host}:${config.port}/${config.name}", config.user, config.passwd, config.driver)
-	}
 
 	static main(args) {
 		def config = ['host': '192.168.9.234', 'name': 'cloudmdlz']
@@ -37,7 +14,7 @@ class TmXmModeAmPmScript {
 	}
 	
 	static generateTm000AndTm001(db = [:]) {
-		def query = sqlInstance(config(db))
+		def query = Gdbc.source(db)
 		try {
 			println 'DO $$';
 			println 'BEGIN';
@@ -63,7 +40,7 @@ class TmXmModeAmPmScript {
 	}
 	
 	static generateTmT107(db = [:]) {
-		def query = sqlInstance(config(db))
+		def query = Gdbc.source(db)
 		println 'DO $$';
 		println 'BEGIN';
 		try {
