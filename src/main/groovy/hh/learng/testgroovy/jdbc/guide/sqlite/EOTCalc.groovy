@@ -6,7 +6,7 @@ class EOTCalc {
 
 	static main(args) {
 		
-		def query = Sqlite.source([path:'/Users/hunnyhu/Desktop/sqlite.db'])
+		def query = Sqlite.source([path:'D:/xTools.db'])
 		def count = 0//工作总天数
 		def eot = 0 //平时加班
 		def weot = 0//周末加班
@@ -27,8 +27,8 @@ class EOTCalc {
 			def hour = String.format('%tH', mDate)
 			def tmp = it.end_date + '|' + date + '|' + week + '|' + hour
 			count ++
-			if (('星期六' == week || '星期日' == week) && !map[date]) {
-				println '==> 周末加班：|' + tmp
+			if ((('星期六' == week || '星期日' == week) && !map[date]) || map[date]) {
+				println '假日加班：|' + tmp + '|★'
 				weot ++
 			}
 			if (hour.toInteger() >= 19) {
