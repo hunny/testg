@@ -58,7 +58,7 @@ class TmXmModeAmPmScript {
 				def ti_end_time = map[row.tmconobj_code]['e']
 				def values = "VALUES ($sip, 1388505600, 253402271999, $tmconobj, $working_schedule, '${ti_start_time}', '${ti_end_time}', 4, 4, 0.5, 0.5, true)"
 				println "\tIF NOT EXISTS(select * from C_TM_T_107 where sys_sip = $sip and tmconobj = $tmconobj ) THEN"
-				println "\t\t$insert $values"
+				println "\t\t$insert $values;"
 				println "\tEND IF;"
 			}
 		} finally {
