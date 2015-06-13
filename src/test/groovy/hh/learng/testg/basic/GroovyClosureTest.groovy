@@ -56,12 +56,26 @@ class GroovyClosureTest {
 		assert adder.call(7) == 12
 		
 		//p.130
+		//闭包参数
+		assert caller { one -> } == 1 
+		assert caller { one, two -> } == 2
+		
+		def myAdder = {x, y -> return x + y}
+		def myAddOne = myAdder.curry(1)
+		assert myAddOne(5) == 6
+		
+		
 	}
 	
 	//A usual method declaration
 	//(3)的方法声明是一个普通的方法,这里没有发现使用闭包的痕迹。
 	def doubleMethod (entry) {
 		entry.value = entry.value * 2
+	}
+	
+	//参数的数量
+	def caller (Closure closure) {
+		closure.getParameterTypes().size()
 	}
 	
 	def benchmark(repeat, Closure worker) {//1. Put closure last
