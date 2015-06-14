@@ -5,6 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 class GroovyClosureTest {
+	
+	//sudo wash -i en0
+	//sudo reaver -d 5 -N -S -i en0 -b 78:A1:06:53:DE:FA -c 11 -vv -A
+	//sudo reaver -i en0 -b 78:A1:06:53:DE:FA -N -S -a -T 0.5 -x 360 -c 11 -vv
+	//sudo reaver -i en0 -b 78:A1:06:53:DE:FA -N -S -a -T 0.5 -x 360 -c 11 -vv
 
 	@Test
 	public void test() {
@@ -64,6 +69,27 @@ class GroovyClosureTest {
 		def myAddOne = myAdder.curry(1)
 		assert myAddOne(5) == 6
 		
+		//通过 isCase 方法进行分类
+		assert [1, 2, 3].grep {it < 3} == [1, 2]
+		switch(10) {
+			case {it % 2 == 1} : assert false
+		}
+	
+		Mother julia = new Mother()
+		def closure = julia.birth(4)
+		def context = closure.call(this)
+		println context[0].class.name
+		
+		assert context[1..4] == [1, 2, 3, 4]
+		println context[5]
+		
+		def rvalue = [1, 2, 3].collect {
+			if (it % 2 == 0) {
+				return it * 2
+			}
+			return it
+		}
+		println rvalue
 		
 	}
 	
@@ -88,7 +114,6 @@ class GroovyClosureTest {
 		return stop - start
 	}
 	
-
 }
 
 class MethodClosureSample {
@@ -112,3 +137,22 @@ class MultiMethodSample {
 		return x + y
 	}
 }
+
+class Mother {
+	
+	int field = 1
+	
+	int foo() {
+		return 2
+	}
+	
+	//This method creates and returns the closure
+	Closure birth(param) {
+		def local = 3
+		def closure = {caller ->
+			[this, field, foo(), local, param, caller]
+		}
+		return closure
+	}
+}
+
