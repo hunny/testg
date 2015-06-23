@@ -194,6 +194,24 @@ class GroovyBasicTest {
 		assert value.equals(new Integer(20));
 		assert binding.getVariable("x").equals(new Integer(123));
 	}
+	
+	@Test
+	public void testContructor() {
+		new Vendor()
+		new Vendor(name: 'Abc')
+		new Vendor(product: 'UTC')
+		def vendor = new Vendor(name: 'ABC', product: 'UTC')
+		assert vendor.name == 'ABC'
+	}
+	
+	@Test
+	public void testGDKProperties() {
+		def vendor = new Vendor();
+		vendor.properties.each {
+			println 'Class Vendor properties: ' + it.key + ', ' + it.value
+		}
+		
+	}
 
 }
 
@@ -203,4 +221,8 @@ class GroovyBasicTest {
  */
 class GroovyBeansBook {
 	String title //声明一个属性
+}
+
+class Vendor {
+	String name, product
 }
