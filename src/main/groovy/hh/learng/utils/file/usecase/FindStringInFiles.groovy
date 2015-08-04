@@ -10,25 +10,29 @@ class FindStringInFiles {
 
 	static main(args) {
 		println 'Searching...'
-		println '--------------'
+		println '-----------------'
 		def result = 0;
 		def dir = new File('D:/环境发布/')
 		dir.eachFileRecurse(FileType.FILES){file->
 			def name = file.name
 			if (name =~ /\.sql$/) {
 				def lineNumber = 0
+				def found = 0
 				file.eachLine { line ->
 					lineNumber ++
-					if (line.contains('c_tm_t_116') || line.contains('C_TM_T_116')) {
+					if (line.contains('is_must') || line.contains('IS_MUST')) {
 						result ++
-						println "=============> File[${file.absolutePath}] found at line number :${lineNumber}"
-						println line
+						found ++
+						if (found == 1) {
+							println "[+][File found]\t|[${file.absolutePath}]"
+						}
+						println "[-][Line: ${lineNumber}]\t|${line}"
 					}
 				}
 			}
 		}
-		println '--------------'
-		println "Over. Result:${result}"
+		println '-----------------'
+		println "Result found:${result}"
 	}
 
 }
