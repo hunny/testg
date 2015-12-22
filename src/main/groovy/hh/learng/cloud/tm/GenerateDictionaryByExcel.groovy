@@ -47,9 +47,25 @@ class GenerateDictionaryByExcel {
 		  query.close();
 		}
 	}
+	
+	def buildData() {
+		def query = Gdbc.source([host:'192.168.9.205', name:'cloud'])
+		file.append('it.ee_id\tit.iden_type\tit.iden_number\tit.object\tit.com_langval\tit.user_name\r\n', 'UTF-8')
+		query.eachRow("""
+select t025.ee_id, t025.iden_type, t025.iden_number, t001.object, t001.com_langval, t008.user_name
+from c_pa_t_045 t025 
+left join c_om_t_001 t001 on t025.ee_id = t001.object 
+left join c_pf_t_008 t008 on t008.ee_id = t001.object
+order by t001.object asc, t001.com_lang asc
+""") {
+		def s = it.ee_id + '\t' + it.iden_type + '\t' + it.iden_number + '\t' + it.object + '\t' + it.com_langval + '\t' + it.user_name + '\r\n'
+			file.append(s, 'UTF-8')
+		}
+	}
 
 	static main(args) {
-		new GenerateDictionaryByExcel().build();
+//		new GenerateDictionaryByExcel().build();
+		new GenerateDictionaryByExcel().buildData();
 	}
 
 }
