@@ -11,18 +11,21 @@ class I18nTranslate {
 //		def http = new HTTPBuilder('https://google.com')
 //		def html = http.get(path : '/search', query : [q:'waffles'])
 //		collectData()
-//		splitData()
+		splitData()
 	}
 	
 	static collectData() {
 		def query = GMdbc.source([host:'192.168.9.243', name:'cubi-life'])
-		query.eachRow("select gc_id, gc_name from shopnc_goods_class") {
-			println '[' + it.gc_id + ' ' + it.gc_name + ']'
+		def file = new File('C:/Users/Hunny.hu/Desktop/goods_class.src')
+		query.eachRow("select gc_id, gc_name from shopnc_goods_class order by gc_id desc limit 2000") {
+			def tmp = '[' + it.gc_id + ' ' + it.gc_name + ']\r\n'
+			print tmp
+			file.append(tmp);
 		}
 	}
 	
 	static splitData() {
-		def file = new File('C:/Users/Hunny.hu/Desktop/goods_class.tmp')
+		def file = new File('C:/Users/Hunny.hu/Desktop/goods_class.src')
 		def sql = new File('C:/Users/Hunny.hu/Desktop/goods_class.sql')
 		Pattern u = Pattern.compile("(\\d+)")
 		file.eachLine { line ->
